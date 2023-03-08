@@ -1,0 +1,14 @@
+{
+  "MaterialInformation": [
+    {
+      "containerCode": "A0000001",
+      "takeStation": "LM1101",
+      "takeLocation": "1",
+      "putStation": "LM2301",
+      "putLocation": "1",
+      "taskid": "0",
+      "judgeTask": null,
+      "taskType": null
+    }
+  ]
+} 

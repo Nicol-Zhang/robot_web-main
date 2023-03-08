@@ -13,7 +13,7 @@
               shadow="hover">
             <template #header>
               <div class="card-header">
-<!--                <el-image :src="getImageUrl(item.name)" />-->
+                <!--<el-image :src="getImageUrl(item.name)" />-->
                 <span>{{ item.label }}</span>
               </div>
               <el-icon><MoreFilled /></el-icon>
@@ -35,16 +35,12 @@
           </el-card>
         </el-col>
       </TransitionGroup>
-      <el-col :span="9" :offset="2" class="addCard">
-        <el-card>
-          <div @click="addHandle()" class="addDiv">
-            <el-image :src="getImageUrl('add')" />
-            <span>项目添加</span>
-          </div>
-        </el-card>
-      </el-col>
     </el-row>
   </div>
+  <el-button @click="addHandle()" class="add-btn">
+    <el-icon><Plus /></el-icon>
+    添加项目
+  </el-button>
   <div class="homeDrawer">
     <el-drawer v-model="drawer" direction="btt" :before-close="handleClose">
       <template #header="{ close, titleId, titleClass }">
@@ -118,20 +114,20 @@ export default defineComponent({
       if (res.msg == 'OK') {
         if(symbol!='onMounted')
         {
-        homeComponents.value.some(item => {
+          homeComponents.value.some(item => {
 
-          if (item.name == name) {
-            item.connectStatu = res.back;
-            if (item.connectStatu) {
-              ElMessage.success(`${name}连接成功`);
+            if (item.name == name) {
+              item.connectStatu = res.back;
+              if (item.connectStatu) {
+                ElMessage.success(`${name}连接成功`);
+              }
+              else {
+                ElMessage.error(`${name}断开连接`);
+              }
+              return true;
             }
-            else {
-              ElMessage.error(`${name}断开连接`);
-            }
-            return true;
-          }
-        })
-       }
+          })
+        }
       }
     };
     //连接软件
@@ -174,17 +170,17 @@ export default defineComponent({
           offset: 50,
         })
       } else {
-        store.commit('addProject', card);   
+        store.commit('addProject', card);
       }
     }
     onMounted(() => {
 
-        homeComponents.value.forEach(element => {
+      homeComponents.value.forEach(element => {
         if (element.name != 'add')
           getBackStatus(element.name,'onMounted')
-        });
-    
-  });
+      });
+
+    });
     return {
       //属性
       homeComponents,
@@ -207,28 +203,15 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+.add-btn{
+  position: absolute;
+  //top: 50px;
+  right: 50px;
+}
 .homeView {
   .homeRow {
     display: flex;
     justify-content: flex-start;
-    .addCard {
-      font-size: 30px;
-      .addDiv {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        .el-image {
-          height: 10%;
-          width: 10%;
-          border-radius: 50%;
-          margin-right: 20px;
-        }
-      }
-      .addDiv:hover {
-        background-color: beige;
-      }
-    }
   }
   .el-card {
     margin: 20px;
@@ -245,7 +228,7 @@ export default defineComponent({
     .card-header {
       //background-color: #13ce66;
       border-radius: 20px;
-      height: 40vh;
+      height: 20vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -255,12 +238,12 @@ export default defineComponent({
         transform: rotate (90deg);
         font-size: 30px
       }
-    /*  .el-image {
-        height: 10%;
-        width: 10%;
-        border-radius: 50%;
-        margin-right: 20px;
-      }*/
+      /*  .el-image {
+          height: 10%;
+          width: 10%;
+          border-radius: 50%;
+          margin-right: 20px;
+        }*/
     }
   }
 }

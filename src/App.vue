@@ -9,5 +9,6 @@
 <style lang="less">
 #app{
     height: 100%;
+  background-color: #f3f5f9        ;
 }
 </style>

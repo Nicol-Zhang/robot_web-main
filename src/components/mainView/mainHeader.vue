@@ -1,8 +1,8 @@
 <template>
   <el-head class="header">
     <div class="l-content" @click="goBackHome()">
-      <!--        <el-icon><Monitor/></el-icon>-->
-      <p>元启</p>
+      <!-- <el-icon><Monitor/></el-icon>-->
+<!--      <p>元启</p>-->
     </div>
     <div class="r-content">
       <el-icon @click="goSolveError" :color="iconColor"><WarnTriangleFilled /></el-icon>
@@ -31,6 +31,7 @@
           style="width: 100%"
           :row-style="{height:'80px'}"
           :row-class-name="tableRowClassName"
+          @row-click="errorShow"
       >
         <el-table-column
             label="异常等级"
@@ -59,21 +60,10 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="查看详情">
-          <el-icon
-              @click=""
-              color="#409eff"
-              size="25px"><MoreFilled /></el-icon>
-        </el-table-column>
       </el-table>
     </template>
-    <template #footer>
-      <div style="flex: auto">
-        <el-button @click="cancelClick">cancel</el-button>
-        <el-button type="primary" @click="confirmClick">confirm</el-button>
-      </div>
-    </template>
   </el-drawer>
+  <ErrorDetail ref="detail"></ErrorDetail>
 </template>
 
 <script>
@@ -81,8 +71,12 @@ import {defineComponent, getCurrentInstance, reactive, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {ElMessage, ElNotification} from 'element-plus'
+import ErrorDetail from "./errorDetail.vue"
 
 export default defineComponent({
+  components:{
+    ErrorDetail
+  },
   setup(){
     const{proxy} = getCurrentInstance();
     const router = useRouter();
@@ -96,6 +90,8 @@ export default defineComponent({
     const errorData = ref(null);
     const haveSolveData=ref(0);
     const manualSolve=ref(0);
+    const detail = ref(null);
+
     //获取列表当前行的高亮显示
     const tagType = (errorLevel) => {
       switch (errorLevel) {
@@ -117,7 +113,6 @@ export default defineComponent({
         return ''
       }
     }
-
     const switchLoading = ref(false);
     const switchChange = async (row) => {
       switchLoading.value = true;
@@ -130,8 +125,7 @@ export default defineComponent({
             return resolve(true)
           }, 1000)
         })
-      }
-      else {
+      } else {
         return new Promise((_, reject) => {
           setTimeout(() => {
             switchLoading.value = false
@@ -141,6 +135,11 @@ export default defineComponent({
         })
       }
     };
+
+    const errorShow = (row) => {
+      console.log(row)
+      detail.value.showErrorDetail(row);
+    }
 
     //监测错误数据
     let getSolveTimer = setInterval(async() => {
@@ -225,12 +224,14 @@ export default defineComponent({
       manualSolve,
       haveSolveData,
       switchLoading,
+      detail,
       //方法
       goBackHome,
       goSolveError,
       tagType,
       tableRowClassName,
-      switchChange
+      switchChange,
+      errorShow
     }
   },
 
@@ -241,13 +242,13 @@ export default defineComponent({
 
 <style lang="less">
 .header{
-  background-color: #2F54EB;
+  background: linear-gradient( #2F54EB, #5a62f9);
   box-shadow: 0 -16px #a4a4a4;;
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 50px;
   .l-content{
     cursor: pointer;
     display: flex;

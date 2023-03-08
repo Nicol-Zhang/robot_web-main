@@ -6,7 +6,7 @@
         </el-header>
       <el-container>
         <el-main>
-            <MainTags></MainTags>
+          <MainTags></MainTags>
             <RouterView></RouterView>
         </el-main>
       </el-container>
@@ -36,7 +36,7 @@ export default defineComponent({
     width: 100%;
     height: 100%;
     .el-header{
-      padding: 0px;
+      padding: 0;
     }
   }
 

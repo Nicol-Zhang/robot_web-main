@@ -14,6 +14,7 @@
     </el-tag>
   </div>
 </template>
+
 <script>
 import { defineComponent, onMounted, reactive} from 'vue';
 import { useRouter,useRoute } from 'vue-router';

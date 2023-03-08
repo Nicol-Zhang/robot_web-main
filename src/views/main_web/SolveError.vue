@@ -14,7 +14,6 @@
     <el-table
         :data="solveDataList"
         style="width: 100%; height: 200px"
-        :cell-style="cellStyle"
         @row-dblclick="errorlShow">
       <el-table-column v-for="item in solveHeadList" :key="item.prop" :label="item.label" :prop="item.prop"
                        :min-width="item.width ? item.width : '8%'">
@@ -44,7 +43,7 @@
     <el-pagination small background layout="prev, pager, next" :total="pageNum.num" class="pager mt-4"
                    @current-change="pageChange" />
   </div>
-  <el-dialog v-model="detailVisible" title="Tips" width="30%" :before-close="handleClose">
+  <el-dialog v-model="detailVisible" title="Tips" width="30%">
     <template #header>
       <span>详细信息</span>
     </template>
@@ -199,7 +198,6 @@ export default defineComponent({
     })
     //列表每行点击时间
     const errorlShow = (row) => {
-      console.log(row);
       detailVisible.value = true;
       proxy.$nextTick(() => {
         Object.assign(detailForm, row)

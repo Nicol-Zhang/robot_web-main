@@ -1,14 +1,15 @@
 <template>
-  <el-head class="header">
-    <div class="l-content" @click="goBackHome()">
+  <div class="header">
+<!--    <div class="l-content" @click="goBackHome()">-->
       <!-- <el-icon><Monitor/></el-icon>-->
-<!--      <p>元启</p>-->
-    </div>
-    <div class="r-content">
+<!--      <p>元启</p>
+</div>
+-->
+    <div v-if="haveSolveData" class="r-content">
       <el-icon @click="goSolveError" :color="iconColor"><WarnTriangleFilled /></el-icon>
       <div id="angle-mark">{{manualSolve}}</div>
     </div>
-  </el-head>
+  </div>
   <el-drawer
       class="warning-box"
       v-model="warningVisible"
@@ -243,12 +244,13 @@ export default defineComponent({
 <style lang="less">
 .header{
   background: linear-gradient( #2F54EB, #5a62f9);
+  backdrop-filter: blur(5px);
   box-shadow: 0 -16px #a4a4a4;;
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 100%;
   .l-content{
     cursor: pointer;
     display: flex;
@@ -266,21 +268,21 @@ export default defineComponent({
     }
   }
   .r-content{
-    display: flex;
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    margin-right: 100px;
+    position: relative;
+    width: 6vw;
+    height: 6vw;
+    margin: 0 auto;
     .el-icon{
+      position: absolute;
       font-size: 40px;
-      margin-right: 20px;
+      margin-left: 40%;
       cursor: pointer;
     }
     #angle-mark{
       color: #ffffff;
       position: absolute;
-      top:15px;
-      right: 70px;
+      top:0px;
+      right: 0px;
     }
     img{
       width: 30px;

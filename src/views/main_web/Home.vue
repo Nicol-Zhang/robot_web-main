@@ -7,40 +7,49 @@
             :key="item.name"
             :span="6"
         >
-          <el-card
-              :body-style="{ padding: '20px', display: 'flex', alignItems: 'center', flexWarp: 'nowarp' }"
+          <div
               class="homeCard"
-              shadow="hover">
-            <template #header>
-              <div class="card-header">
-                <!--<el-image :src="getImageUrl(item.name)" />-->
-                <span>{{ item.label }}</span>
+              @click=handlePoint(item)
+          >
+            <el-image :src="getImageUrl(item.name)" />
+<!--            <el-popover :width="100" trigger="click">
+              <template #reference>
+                <el-button style="margin-right: 16px" text>
+                  <el-icon><MoreFilled /></el-icon>
+                </el-button>
+              </template>
+              <div class="btn-bar">
+                <div @click="deleteThisCard(item)" style="border-bottom: 1px solid #808080">删除</div>
+                <div @click="connectBack(item.name)">
+                  <el-icon v-if="btm === 'Link'" :color="item.connectStatu ? 'green' : 'red'">
+                    <component class="icon" :is="btm"></component>
+                  </el-icon>
+                  连接
+                </div>
               </div>
-              <el-icon><MoreFilled /></el-icon>
-            </template>
-            <div class="leftLine" v-if="item.name !== 'add'">
-              <el-button text class="button" v-for="btm in buttons">
-                <el-icon v-if="btm === 'Link'" :color="item.connectStatu ? 'green' : 'red'"
-                         @click="connectBack(item.name)">
-                  <component class="icon" :is="btm"></component>
-                </el-icon>
-                <el-icon v-if="btm === 'Pointer'" :color="item.connectStatu ? 'green' : 'red'" @click="handlePoint(item)">
-                  <component class="icon" :is="btm"></component>
-                </el-icon>
-                <el-icon v-else-if="btm === 'Delete'" color="green" @click="deleteThisCard(item)">
-                  <component class="icon" :is="btm"></component>
-                </el-icon>
-              </el-button>
-            </div>
-          </el-card>
+
+            </el-popover>-->
+
+            <!--            <div class="leftLine" v-if="item.name !== 'add'">-->
+            <!--              <el-button text class="button" v-for="btm in buttons">-->
+            <!--                <el-icon v-if="btm === 'Link'" :color="item.connectStatu ? 'green' : 'red'"-->
+            <!--                         @click="connectBack(item.name)">-->
+            <!--                  <component class="icon" :is="btm"></component>-->
+            <!--                </el-icon>-->
+
+            <!--              </el-button>-->
+            <!--            </div>-->
+          </div>
+          <div class="card-header">
+            <span>{{ item.label }}</span>
+          </div>
         </el-col>
       </TransitionGroup>
     </el-row>
+    <el-button type="primary" @click="addHandle()" class="add-btn" plain>
+      <svg x="1678341947511" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3974" width="20" height="20"><path d="M720 112a192 192 0 1 0 0 384 192 192 0 0 0 0-384z m-128 192a128 128 0 1 1 256 0 128 128 0 0 1-256 0zM128 192a64 64 0 0 1 64-64h224a64 64 0 0 1 64 64v224a64 64 0 0 1-64 64H192a64 64 0 0 1-64-64V192z m64 0v224h224V192H192zM128 608a64 64 0 0 1 64-64h224a64 64 0 0 1 64 64V832a64 64 0 0 1-64 64H192a64 64 0 0 1-64-64V608z m64 0V832h224V608H192zM544 608a64 64 0 0 1 64-64H832a64 64 0 0 1 64 64V832a64 64 0 0 1-64 64H608a64 64 0 0 1-64-64V608z m64 224H832V608H608V832z" fill="#409eff" fill-opacity=".9" p-id="3975"></path></svg>
+    </el-button>
   </div>
-  <el-button @click="addHandle()" class="add-btn">
-    <el-icon><Plus /></el-icon>
-    添加项目
-  </el-button>
   <div class="homeDrawer">
     <el-drawer v-model="drawer" direction="btt" :before-close="handleClose">
       <template #header="{ close, titleId, titleClass }">
@@ -74,7 +83,6 @@ import { ElMessage, ElNotification } from 'element-plus';
 import { defineComponent, getCurrentInstance, onBeforeMount, onMounted, onUpdated, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { create } from 'lodash';
 export default defineComponent({
   setup() {
     const store = useStore();
@@ -88,9 +96,9 @@ export default defineComponent({
     };
     const chooseChildren = (label) => {
       if (label !== '项目添加') {
-        let hasChildrens = homeComponents.value.filter((item) => item.children);
-        let children = hasChildrens.filter((item) => item.label == label);
-        return children[0].children;
+          let hasChildrens = homeComponents.value.filter((item) => item.children);
+          let children = hasChildrens.filter((item) => item.label === label);
+          return children[0].children;
       }
       else {
         return addCardList;
@@ -102,7 +110,7 @@ export default defineComponent({
       router.push({ name: item.name });
     }
     let getImageUrl = (imgSrc) => {
-      return new URL(`../../assets/${imgSrc}.jpg`, import.meta.url).href;
+      return new URL(`../../assets/${imgSrc}.png`, import.meta.url).href;
     }
     //软件在线状态
     const buttons = reactive(['Link', 'Pointer', 'Delete']);
@@ -111,8 +119,8 @@ export default defineComponent({
       let res = await proxy.$api.getBackStatus({
         name: name
       });
-      if (res.msg == 'OK') {
-        if(symbol!='onMounted')
+      if (res.msg === 'OK') {
+        if(symbol!=='onMounted')
         {
           homeComponents.value.some(item => {
 
@@ -135,16 +143,23 @@ export default defineComponent({
       let res = await proxy.$api.connectBack({
         name:name
       })
-      if(res.msg=='OK'){
+      if(res.msg==='OK'){
         getBackStatus(name);
       }
     }
     //drawer界面
     const drawer = ref(false);
     const drawerTitle = ref('iwms');
+
     const handlePoint = (item) => {
-      drawerTitle.value = item.label;
-      drawer.value = true;
+      if (item.label === 'IWMS'){
+        //todo
+        window.open('https://blog.csdn.net/ForeverBana/article/details/106748356',"_blank");
+      }else{
+        drawerTitle.value = item.label;
+        drawer.value = true;
+      }
+
     }
     //删除card
     const deleteThisCard = (card) => {
@@ -160,7 +175,7 @@ export default defineComponent({
     }
     //添加card
     const addProjectCard = (card) => {
-      let isAddList = store.state.projectList.filter(item => item.label == card.label);
+      let isAddList = store.state.projectList.filter(item => item.label === card.label);
       if (isAddList.length > 0) {
         ElNotification({
           title: '消息',
@@ -174,12 +189,10 @@ export default defineComponent({
       }
     }
     onMounted(() => {
-
       homeComponents.value.forEach(element => {
-        if (element.name != 'add')
+        if (element.name !== 'add')
           getBackStatus(element.name,'onMounted')
       });
-
     });
     return {
       //属性
@@ -203,50 +216,68 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-.add-btn{
-  position: absolute;
-  //top: 50px;
-  right: 50px;
-}
 .homeView {
+  position: absolute;
+  margin:0 auto;
+  padding: 3vw;
+  left: 3vw;
+  bottom: 28vh;
+  width: 50vw;
+  color: #424242;
+  .add-btn{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    position: absolute;
+    //top: 50px;
+    right: 0;
+    bottom: -40px;
+  }
   .homeRow {
     display: flex;
     justify-content: flex-start;
   }
-  .el-card {
-    margin: 20px;
-    .leftLine {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
-      .el-icon {
-        font-size: 30px;
-      }
+  .homeCard {
+    padding: 20px;
+    display: flex;
+    background-color: #475cf3;
+    height: 6vw;
+    width: 6vw;
+    border-radius: 30%;
+    margin: 0 0 15px 20px;
+    .el-icon {
+      transform: rotate (90deg);
+      font-size: 30px
     }
-    .card-header {
-      //background-color: #13ce66;
-      border-radius: 20px;
-      height: 20vh;
+    /*  .el-image {
+        height: 10%;
+        width: 10%;
+        border-radius: 50%;
+        margin-right: 20px;
+      }*/
+  }
+  .el-popover{
+    z-index: 1000;
+    .btn-bar{
       display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 25px;
-      .el-icon {
-        transform: rotate (90deg);
-        font-size: 30px
+      flex-direction: column;
+      div{
+        text-align: center;
+        gap: 10px;
       }
-      /*  .el-image {
-          height: 10%;
-          width: 10%;
-          border-radius: 50%;
-          margin-right: 20px;
-        }*/
     }
   }
+  .card-header {
+    text-align: left;
+    justify-content: center;
+    font-size: 14px;
+    margin-left: 15%;
+    letter-spacing: 1px;
+    font-weight: bolder;
+  }
 }
+
+
 .homeDrawer {
   header {
     margin: 0px;

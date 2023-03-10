@@ -13,10 +13,14 @@
   <div class="table">
     <el-table
         :data="solveDataList"
-        style="width: 100%; height: 200px"
+        style="width: 100%;"
         @row-dblclick="errorlShow">
-      <el-table-column v-for="item in solveHeadList" :key="item.prop" :label="item.label" :prop="item.prop"
-                       :min-width="item.width ? item.width : '8%'">
+      <el-table-column
+          v-for="item in solveHeadList"
+          :key="item.prop"
+          :label="item.label"
+          :prop="item.prop"
+          :min-width="item.width ? item.width : '8%'">
       </el-table-column>
       <el-table-column prop="errorLevel" label="异常等级" width="100" filter-placement="bottom-end" table-layout="fixed">
         <template #default="scope">

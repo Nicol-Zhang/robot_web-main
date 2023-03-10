@@ -58,6 +58,7 @@ export default defineComponent({
 </script>
 <style lang="less">
 .solveHead{
+  margin-left: 20px;
   .el-tag{
     margin: 10px 10px 30px 0;
     cursor: pointer;

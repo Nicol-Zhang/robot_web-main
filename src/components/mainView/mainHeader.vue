@@ -1,10 +1,7 @@
 <template>
-  <div class="header">
-<!--    <div class="l-content" @click="goBackHome()">-->
-      <!-- <el-icon><Monitor/></el-icon>-->
-<!--      <p>元启</p>
-</div>
--->
+  <div
+    :class="$route.name==='home'?'header':'thumbnail-header'"
+  >
     <div v-if="haveSolveData" class="r-content">
       <el-icon @click="goSolveError" :color="iconColor"><WarnTriangleFilled /></el-icon>
       <div id="angle-mark">{{manualSolve}}</div>
@@ -251,22 +248,6 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  .l-content{
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    p{
-      font-size: 20px;
-      color: #424242;
-      margin-left: 20px;
-      letter-spacing: 3px;
-    }
-    .el-icon{
-      color: white;
-      font-size: 20px;
-      margin:0 10px 0 10px;
-    }
-  }
   .r-content{
     position: relative;
     width: 6vw;
@@ -281,8 +262,38 @@ export default defineComponent({
     #angle-mark{
       color: #ffffff;
       position: absolute;
-      top:0px;
-      right: 0px;
+      top: 0;
+      right: 0;
+    }
+    img{
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 10px;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+  }
+}
+.thumbnail-header{
+  width: 10vw;
+  .r-content{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    right: 0;
+    width: 3vw;
+    height: 3vw;
+    .el-icon{
+      font-size: 25px;
+      margin: 30% 0 0 40%;
+      cursor: pointer;
+    }
+    #angle-mark{
+      color: #414040;
+      position: absolute;
+      top:2px;
+      right: 0;
     }
     img{
       width: 30px;

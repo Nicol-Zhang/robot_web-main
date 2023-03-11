@@ -41,7 +41,7 @@
             <!--            </div>-->
           </div>
           <div class="card-header">
-            <span>{{ item.label }}</span>
+            <span>{{item.label}}</span>
           </div>
         </el-col>
       </TransitionGroup>
@@ -152,14 +152,10 @@ export default defineComponent({
     const drawerTitle = ref('iwms');
 
     const handlePoint = (item) => {
-      if (item.label === 'IWMS'){
         //todo
-        window.open('https://blog.csdn.net/ForeverBana/article/details/106748356',"_blank");
-      }else{
+        // window.open('http://10.50.5.35:1314/',"_blank");
         drawerTitle.value = item.label;
         drawer.value = true;
-      }
-
     }
     //删除card
     const deleteThisCard = (card) => {
@@ -249,12 +245,7 @@ export default defineComponent({
       transform: rotate (90deg);
       font-size: 30px
     }
-    /*  .el-image {
-        height: 10%;
-        width: 10%;
-        border-radius: 50%;
-        margin-right: 20px;
-      }*/
+
   }
   .el-popover{
     z-index: 1000;
@@ -280,8 +271,8 @@ export default defineComponent({
 
 .homeDrawer {
   header {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     background-color: #003399;
     font-size: 20px;
     color: aliceblue;

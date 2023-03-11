@@ -12,20 +12,20 @@
      development:
      {
          baseApi: '/',
-         mockApi: 'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api',
+         // mockApi: 'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api',
      },
      test:{
          baseApi:'//test.future.com/api',
-         mockApi:'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api'
+         // mockApi:'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api'
      },
      prod:{
          baseApi:'//future.com/api',
-         mockApi:'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api'
+         // mockApi:'https://www.fastmock.site/mock/cdb039c61634865791c720b044e5f32c/api'
      }
  }
  export default{
      env,
      //mock 总开关
-     mock:true,
+     // mock:true,
      ...EnvConfig[env]
  }

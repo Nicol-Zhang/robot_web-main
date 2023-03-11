@@ -19,7 +19,7 @@ service.interceptors.request.use((req)=>{
 service.interceptors.response.use((res)=>{
     const{code,data,msg}=res;
     //视情况而定
-    if(data.code==200){
+    if(data.code===200){
         return data;
     }else{
         //网络请求错误
@@ -42,7 +42,7 @@ function request(options){
         isMock=options.mock;
     }
     //对线上环境做处理
-    if(config.env=='prod'){
+    if(config.env==='prod'){
         //不使用mock机会
         service.defaults.baseURL=config.baseApi
     }

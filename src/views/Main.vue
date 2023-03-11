@@ -1,17 +1,24 @@
 <template>
-  <el-row class="common-layout">
+  <el-row v-if="$route.name==='home'" class="common-layout">
     <!--      <el-header>
                 <MainHeader></MainHeader>
             </el-header>-->
-    <el-col :span="$route.name==='home' ? 14 : 24" class="main">
-      <MainTags></MainTags>
+    <el-col :span="14" class="main">
       <RouterView></RouterView>
     </el-col>
-    <el-col :span="$route.name==='home' ? 10 : 0">
+    <el-col :span="10">
       <MainHeader></MainHeader>
     </el-col>
-
   </el-row>
+  <div v-else class="sub-layout">
+    <div class="sub-main">
+      <MainTags></MainTags>
+      <RouterView></RouterView>
+    </div>
+    <div class="sub-header">
+      <MainHeader></MainHeader>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,6 +40,20 @@ export default defineComponent({
 .common-layout{
   height: 100%;
   width:100%;
-
+}
+.sub-layout{
+  position:relative;
+  height: 100%;
+  width:100%;
+  .sub-main{
+    height: 100%;
+    width: 100%;
+  }
+  .sub-header{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+  }
 }
 </style>

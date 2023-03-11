@@ -210,7 +210,7 @@ export default defineComponent({
         })
         //开始查询
         const onFindError=async()=>{          
-            config.name=formInline.errorCode;
+            config.name = formInline.errorCode;
             let res=await proxy.$api.getErrorData(config);
             errorDataList.value=res.data;
             pageNum.num= (res.total%10) !==0 ? Math.ceil(res.total/10)*10 : res.total;

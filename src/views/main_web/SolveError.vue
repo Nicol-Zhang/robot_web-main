@@ -239,7 +239,8 @@ export default defineComponent({
     const switchLoading = ref(false);
 
     /**
-    * @desc: 切换硬触发前向后端发送解决异常请求 （proxy.$api.solveErrorData），
+    * @desc:
+     * 切换硬触发前向后端发送解决异常请求 （proxy.$api.solveErrorData），
      * 后端返回"OK"提示用户”异常解决完成“，从后端获取solveData
      * 后端未返回"OK"向用户抛出异常
     */

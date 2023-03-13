@@ -118,7 +118,7 @@ export default defineComponent({
     const MQ_SERVICE=ref("ws://10.10.109.32:15674/ws") ;// ws服务地址
     const MQ_USERNAME =ref("test")// 连接用户名
     const MQ_PASSWORD=ref("test") //  连接密码
-    let client ;
+    let client = reactive();
     const errorTopic = ref();
     const solveDataTopic = ref();
 
@@ -132,11 +132,12 @@ export default defineComponent({
         }
       };
       // 初始化客户端
-      this.client = new Client(conf);
+      client = new Client(conf);
       client.onConnect=(x) => {
         this.client.publish(
             {destination: "test", body: "Hello, STOMP"}
         )
+        console.log(222);
         client.subscribe(errorTopic, responseCallback);//订阅异常队列
         client.subscribe(solveDataTopic, solveCallback );//订阅异常处理队列
       }

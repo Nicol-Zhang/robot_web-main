@@ -1,40 +1,44 @@
-/* 初始化stomp client实例*/
+/* 初始化stomp client实例
+* https://stomp-js.github.io/
+* */
+
 import {Client} from "@stomp/stompjs";
 import {RMQ_ACCOUNT, RMQ_PASSWORD, RMQ_SERVER}from "@/config/rmqConfig.js"
 
-export class StompClient{
-    constructor(topic) {
-        this.conf = {
-            brokerURL: RMQ_SERVER,
-            connectHeaders: {
-                login: RMQ_ACCOUNT,
-                passcode: RMQ_PASSWORD
-            }
-        }
-        this.client = new Client(this.conf);
-        this.connect()
+const conf = {
+    brokerURL: RMQ_SERVER,
+    connectHeaders: {
+        login: RMQ_ACCOUNT,
+        passcode: RMQ_PASSWORD
     }
-    /**@desc 建立代理连接*/
-    connect(){
-        const _this = this;
-        this.client.onConnect((success) => {
-            _this.client.subscribe(_this.topic, (msg)=>{
-                //todo
-            })
-        })
-        this.client.activate();
-    }
-    /**@desc 订阅消息*/
-    subscribe(){
+};
+let client = new Client(conf);
 
-    }
-    /**@desc 断开连接*/
-    closeConnect(){
-        this.client.onDisconnect(()=>{
-            console.log("断开连接")
-        })
-    }
+/**
+* @module: src\api\stomp-client.js
+* @desc: 消息订阅
+* @param: topic
+* @param: callback
+* @return:
+*/
+export const connect = (topic, callback)=>{
+    client.onConnect=(frame)=>{
+        client.subscribe(topic, callback);
+    };
+    client.activate();
 }
-//创建实例
 
-export default new StompClient(RMQ_SERVER, RMQ_ACCOUNT, RMQ_PASSWORD);
+/**
+* @module: src\api\stomp-client.js
+* @desc: 消息发布
+* @param: destination 发布主题
+* @param: body 发布体
+* @return:
+*/
+export const publishMsg=(destination, body)=>{
+    client.publish({destination: destination, body: body})
+}
+
+export const disconnect=()=>{
+    client.deactivate();
+}

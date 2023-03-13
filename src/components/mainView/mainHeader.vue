@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="$route.name==='home'?'header':'thumbnail-header'"
+      :class="$route.name==='home'?'header':'thumbnail-header'"
   >
     <div v-if="haveSolveData" class="r-content">
       <el-icon @click="goSolveError" :color="iconColor"><WarnTriangleFilled /></el-icon>
@@ -70,6 +70,7 @@ import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {ElMessage, ElNotification} from 'element-plus'
 import ErrorDetail from "./errorDetail.vue"
+import {Client} from "@stomp/stompjs"
 
 export default defineComponent({
   components:{
@@ -89,6 +90,8 @@ export default defineComponent({
     const haveSolveData=ref(0);
     const manualSolve=ref(0);
     const detail = ref(null);
+    const switchLoading = ref(false);
+
 
     //获取列表当前行的高亮显示
     const tagType = (errorLevel) => {
@@ -102,7 +105,7 @@ export default defineComponent({
       }
     }
     /**
-     * @desc: table单行样式设置
+     * @desc: 人工处理异常高亮显示
      */
     const tableRowClassName = ({row, rowIndex}) => {
       if (row.errorSolveType === "人工手动") {
@@ -111,31 +114,52 @@ export default defineComponent({
         return ''
       }
     }
-    const switchLoading = ref(false);
-    const switchChange = async (row) => {
-      switchLoading.value = true;
-      let res = await proxy.$api.solveErrorData(row);
-      if (res.msg === 'OK') {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            switchLoading.value = false
-            ElMessage.success('异常解决完成')
-            return resolve(true)
-          }, 1000)
-        })
-      } else {
-        return new Promise((_, reject) => {
-          setTimeout(() => {
-            switchLoading.value = false
-            ElMessage.error('异常解决失败，请重试')
-            return reject(new Error('Error'))
-          }, 1000)
-        })
+
+    const MQ_SERVICE=ref("ws://10.10.109.32:15674/ws") ;// ws服务地址
+    const MQ_USERNAME =ref("test")// 连接用户名
+    const MQ_PASSWORD=ref("test") //  连接密码
+    let client ;
+    const errorTopic = ref();
+    const solveDataTopic = ref();
+
+    /**@desc 初始化客户端 创建连接*/
+    const initRabbitMQ = ()=>{
+      let conf = {
+        brokerURL: MQ_SERVICE, // 登录账户的用户名和密码
+        connectHeaders: {
+          login: MQ_USERNAME,
+          passcode: MQ_PASSWORD
+        }
+      };
+      // 初始化客户端
+      this.client = new Client(conf);
+      client.onConnect=(x) => {
+        this.client.publish(
+            {destination: "test", body: "Hello, STOMP"}
+        )
+        client.subscribe(errorTopic, responseCallback);//订阅异常队列
+        client.subscribe(solveDataTopic, solveCallback );//订阅异常处理队列
       }
+      client.activate()
+    }
+
+    /**@desc 订阅回调*/
+    const responseCallback=(frame)=>{
+      //todo
+      console.log(frame)
+    }
+    const solveCallback=(frame)=>{
+      console.log(frame)
+    }
+    /**@desc 硬处理*/
+    const switchChange = (row) => {
+      switchLoading.value = true;
+      /*todo undefined*/
+      client.publish({});
     };
 
+    /**@desc 打開異常提示*/
     const errorShow = (row) => {
-      console.log(row)
       detail.value.showErrorDetail(row);
     }
 
@@ -186,17 +210,6 @@ export default defineComponent({
             iconColor.value = iconColor.value === 'white' ? 'red' : 'white';
           }, 200);
           warningVisible.value = true;
-          //出现异常
-          // ElNotification({
-          //   title: '异常报告',
-          //   message: `当前机器人有${haveSolveData.value}个异常，其中${manualSolve.value}个异常需要手动消除，请尽快处理`,
-          //   duration: 0,
-          //   type: 'error',
-          //   offset: 50,
-          //   onClick: () => {
-          //     goSolveError();
-          //   }
-          // })
         }
       }
       else{
@@ -229,9 +242,13 @@ export default defineComponent({
       tagType,
       tableRowClassName,
       switchChange,
-      errorShow
+      errorShow,
+      initRabbitMQ
     }
   },
+  mounted() {
+    this.initRabbitMQ();
+  }
 
 })
 

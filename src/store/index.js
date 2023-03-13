@@ -11,6 +11,7 @@ export default createStore({
                 icon: 'home'
             },
         ],
+        //界面显示的应用
         projectList:[
             {
                 path:'/iwms',
@@ -123,16 +124,17 @@ export default createStore({
                     }
                 ]
             },
-            //   {
-            //       path:'/add',
-            //       name:'add',
-            //       label:'项目添加',
-            //       icon:'plus',
-            //       url:'main_web/add.vue',
-            //       connectStatu:false,
-            //   },
+        /*    {
+                name:'add',
+                path:'/add',
+                label:'项目添加',
+                icon:'plus',
+                url:'main_web/add.vue',
+                connectStatus:false,
+            },*/
 
         ],
+        //可添加至页面的应用
         addCardList:[
             {
                 label: 'IWMS',
@@ -257,36 +259,62 @@ export default createStore({
                     ]
                 },
             },
-        ]
+        ],
+        //用户添加的应用连接
+        autoUrl: null,
     },
-    mutations:{
-        addTag(state,tag){
-            const {path,name,label,icon}=tag;
-            let reTags=state.tagList.filter(item=>item.path===path)
-            if(reTags.length<=0)
-            {
+    mutations: {
+        changeAutoUrl(state, url){
+            state.autoUrl = url;
+        },
+        addTag(state, tag) {
+            const {path, name, label, icon} = tag;
+            let reTags = state.tagList.filter(item => item.path === path)
+            if (reTags.length <= 0) {
                 state.tagList.push({
-                    path:path,
-                    name:name,
-                    label:label,
-                    icon:icon
+                    path: path,
+                    name: name,
+                    label: label,
+                    icon: icon
                 })
             }
         },
-        deleteTag(state,tag){
-            const {path,name,label,icon}=tag;
-            let index=state.tagList.findIndex(item=>item.path===path);
-            state.tagList.splice(index,1);
+        deleteTag(state, tag) {
+            const {path, name, label, icon} = tag;
+            let index = state.tagList.findIndex(item => item.path === path);
+            state.tagList.splice(index, 1);
         },
-        deleteProject(state,project){
-            state.projectList = state.projectList.filter(item=>item.name!==project.name);
+        deleteProject(state, project) {
+            state.projectList = state.projectList.filter(item => item.name !== project.name);
             console.log(state.projectList);
         },
-        addProject(state,project){
-            state.projectList.unshift(state.addCardList.find(item=>item.label===project.label).source);
-            console.log(state.projectList);
+        addProject(state, project) {
+            state.projectList.unshift(state.addCardList.find(item => item.label === project.label).source);
         },
+        /**
+         * @module: src\store\index.js
+         * @desc: 创建用户自定义应用
+         * @param:
+         * @return:
+         */
+        createProject(state, project) {
+            let temp = {
+                label: project.label,
+                source: {
+                    path: '/add',
+                    name: 'add',
+                    label: project.label,
+                    icon: 'autoApp',
+                    url: project.url,
+                    selfDefined: true,
+                    connectStatus: false,
+                },
+            }
+            if (state.addCardList.find(item => item.label === project.label)===undefined){
+                state.addCardList.push(temp)
+            }
 
+        },
     },
     modules:{
         exception
